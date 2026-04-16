@@ -11,8 +11,8 @@ This project implements **Industrial Anomaly Detection (IAD)** techniques specif
 ## 📂 Project Structure
 The repository is organized as follows:
 
-*   `src/`: Core logic including the main Photometric Stereo implementation and training scripts.
-*   `experiments/`: Benchmarking scripts and figure generation for research papers.
+*   `src/`: Core logic including the main `iad_main_pipeline.py`, `iad_dataset_generator.py`, and `iad_thesis_grid_search.py`.
+*   `experiments/`: Plotting scripts for research papers (`plot_*.py`) and hardware utilities.
 *   `docs/`: Research papers, thesis sections, and project documentation.
 *   `image/`: Visualization results, defect heatmaps, and experimental setup photos.
 *   `3D/`: CAD models for the physical experimental setup (casing, mounts).
@@ -22,7 +22,7 @@ The repository is organized as follows:
 ## 🛠️ Setup & Installation
 
 ### Environment
-You can set up the required Python environment using the provided `environment.yml` (for Conda) or `requirements_colab.txt` (for pip/Google Colab).
+You can set up the required Python environment using the provided `environment.yml` (for Conda) or `iad_setup_colab.py` (for Google Colab).
 
 **Using Conda:**
 ```bash
@@ -30,16 +30,11 @@ conda env create -f environment.yml
 conda activate iad-env
 ```
 
-**Using Pip:**
-```bash
-pip install -r requirements_colab.txt
-```
-
 ## 📖 Usage
-1.  **Run End-to-End Benchmark**: Use `src/ps_benchmark.py` for the complete pipeline (PS → Dataset → Training → Evaluation).
-2.  **Build Dataset**: Use `src/build_dataset.py` to prepare your raw captures in MVTec format.
-3.  **Run Thesis Experiments**: Use `src/thesis_experiment_full.py` to run the 30-experiment grid search benchmark.
-4.  **Generate Figures**: All figure generation scripts (e.g., `fig2.py`, `generate_Figure2.py`) are located in the `experiments/` folder.
+1.  **Run End-to-End Benchmark**: Use `src/iad_main_pipeline.py` for the complete pipeline (PS → Dataset → Training → Evaluation).
+2.  **Build Dataset**: Use `src/iad_dataset_generator.py` to prepare your raw captures in MVTec format.
+3.  **Run Thesis Experiments**: Use `src/iad_thesis_grid_search.py` to run the 30-experiment grid search benchmark.
+4.  **Generate Figures**: All figure generation scripts (e.g., `plot_iad_ps_results.py`, `plot_iad_setup_diagram.py`) are located in the `experiments/` folder.
 
 ## 📝 Citation
 If you use this work in your research, please refer to the documents in the `docs/` folder for citation details.

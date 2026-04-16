@@ -1,0 +1,30 @@
+name: ps_dataset
+
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+
+dependencies:
+  # Python
+  - python=3.11
+
+  # PyTorch (CUDA 12.1) — เปลี่ยน cudatoolkit ให้ตรง GPU ถ้าต้องการ
+  - pytorch>=2.2.0
+  - torchvision>=0.17.0
+  - pytorch-cuda=13.0
+
+  # Computer Vision
+  - opencv>=4.9.0          # cv2
+
+  # Numerical
+  - numpy>=1.26.0
+
+  # Progress bar
+  - tqdm>=4.66.0
+
+  # pip-only packages
+  - pip
+  - pip:
+      - tqdm>=4.66.0       # fallback เผื่อ conda-forge ไม่ตรงเวอร์ชัน

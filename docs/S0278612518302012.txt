@@ -1,0 +1,11 @@
+Michelle M. Stallard (Voelker), Cameron A. MacKenzie, Frank E. Peters,
+A probabilistic model to estimate visual inspection error for metalcastings given different training and judgment types, environmental and human factors, and percent of defects,
+Journal of Manufacturing Systems,
+Volume 48, Part A,
+2018,
+Pages 97-106,
+ISSN 0278-6125,
+https://doi.org/10.1016/j.jmsy.2018.07.002.
+(https://www.sciencedirect.com/science/article/pii/S0278612518302012)
+Abstract: Current methods for visual inspection of cast metal surfaces are variable in both terms of repeatability and reproducibility. Because of this variation in the inspection methods, extra finishing operations are often prescribed; much of this is over processing in attempt to avoid rework or customer rejection. Additionally, defective castings may pass inspection and be delivered to the customer. Given the importance of ensuring that customers receive high-quality castings, this article analyzes and quantifies the probability of Type I and II errors, where a Type I error is a false alarm, and a Type II error misses a present defect. A probabilistic model frequently used in risk analysis, called an influence diagram, is developed to incorporate different factors impacting the chances of Type I and II errors. These factors include: training for inspectors, the type of judgment used during the inspection process, the percentage of defective castings, environmental conditions, and the inspectors’ capabilities. The model is populated with inputs based on prior experimentation and the authors’ expertise. The influence diagram calculates the probability of a Type I error at 0.35 and the probability of a Type II error at 0.40. These results are compared to a naïve Bayes model. A manufacturer can use this analysis to identify factors in its foundry that could reduce the probability of errors. Even under the best-case scenario, the probability of Type I error is 0.18 and the probability of Type II error is 0.30 for visual inspection. This indicates improvements to the inspection process for cast metal surfaces is required.
+Keywords: Risk assessment; Cast surfaces; Visual inspection; Influence diagrams; Surface inspection

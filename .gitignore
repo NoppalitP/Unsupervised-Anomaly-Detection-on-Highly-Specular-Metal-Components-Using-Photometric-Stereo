@@ -1,0 +1,29 @@
+# Temporary files
+~$*.docx
+*.tmp
+*.log
+
+# Python/Environment
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.ipynb_checkpoints/
+
+# Data and large files (Adjust if you want to include some of these)
+archive/
+data_scan/
+mvtec_dataset*/
+comparison_results/
+image/*.zip
+image/*.pdf
+image/*.docx
+
+# VS Code
+.vscode/

@@ -1,6 +1,6 @@
-# Industrial Anomaly Detection (IAD) using Photometric Stereo
+# Unsupervised Anomaly Detection on Highly Specular Metal Components Using Photometric Stereo
 
-This project implements **Industrial Anomaly Detection (IAD)** techniques specifically leveraging **Photometric Stereo (PS)**. By using multiple light directions with a fixed camera position, we can estimate surface normals and isolate defects (like scratches and dents) from surface texture and stains.
+This project implements **Industrial Anomaly Detection (IAD)** techniques specifically leveraging **Photometric Stereo (PS)**. By using multiple light directions with a fixed camera position, we can estimate surface normals and isolate defects (like scratches and dents) from surface texture and stains on highly specular metal surfaces.
 
 ## 🚀 Features
 - **Photometric Stereo Pipeline**: Estimate surface normals, albedo, and depth maps.

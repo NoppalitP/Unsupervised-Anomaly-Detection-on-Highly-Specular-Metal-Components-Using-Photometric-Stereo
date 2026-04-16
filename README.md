@@ -36,9 +36,10 @@ pip install -r requirements_colab.txt
 ```
 
 ## 📖 Usage
-1.  **Build Dataset**: Use `src/build_dataset.py` to prepare your raw captures.
-2.  **Run Photometric Stereo**: Execute `src/photometric_stereo.py` to process images and generate normal maps.
-3.  **Train Anomaly Detection**: Use `src/train.ipynb` or `src/thesis_experiment_full.py` to train detection models.
+1.  **Run End-to-End Benchmark**: Use `src/ps_benchmark.py` for the complete pipeline (PS → Dataset → Training → Evaluation).
+2.  **Build Dataset**: Use `src/build_dataset.py` to prepare your raw captures in MVTec format.
+3.  **Run Thesis Experiments**: Use `src/thesis_experiment_full.py` to run the 30-experiment grid search benchmark.
+4.  **Generate Figures**: All figure generation scripts (e.g., `fig2.py`, `generate_Figure2.py`) are located in the `experiments/` folder.
 
 ## 📝 Citation
 If you use this work in your research, please refer to the documents in the `docs/` folder for citation details.

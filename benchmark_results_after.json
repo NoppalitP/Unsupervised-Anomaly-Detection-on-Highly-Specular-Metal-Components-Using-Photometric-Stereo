@@ -38,5 +38,7 @@
     },
     "visualize": true,
     "viz_dir": "heatmaps_after",
-    "output_csv": "benchmark_results_after.csv"
+    "output_csv": "benchmark_results_after.csv",
+    "save_models": true,
+    "models_dir": "checkpoints_after"
 }

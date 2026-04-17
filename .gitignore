@@ -24,6 +24,7 @@ comparison_results/
 image/*.zip
 image/*.pdf
 image/*.docx
+checkpoints*/
 
 # VS Code
 .vscode/

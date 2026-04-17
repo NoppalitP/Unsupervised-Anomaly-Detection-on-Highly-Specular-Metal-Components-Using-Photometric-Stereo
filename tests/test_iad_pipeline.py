@@ -4,10 +4,13 @@ import torch
 import cv2
 import sys
 import os
+from pathlib import Path
 
 # Ensure the src directory is in the path
-sys.path.append(os.path.join(os.getcwd(), 'src'))
-from iad_dataset_generator import PhotometricStereoSolver, AutoCropper
+sys.path.append(os.getcwd())
+from src.core.solver import PhotometricStereoSolver
+from src.data.builder import AutoCropper
+from src.config.config import PSConfig, DataConfig
 
 class TestIADPipeline(unittest.TestCase):
 
@@ -20,19 +23,22 @@ class TestIADPipeline(unittest.TestCase):
             self.L[i, 0] = np.cos(az) * np.sin(slant)
             self.L[i, 1] = np.sin(az) * np.sin(slant)
             self.L[i, 2] = np.cos(slant)
+        self.device = torch.device('cpu')
 
     # =========================================================================
     # 1. PhotometricStereoSolver Tests
     # =========================================================================
 
     def test_ps_solver_init(self):
-        solver = PhotometricStereoSolver(self.L, drop_dark=1, drop_bright=1)
+        cfg = PSConfig(drop_dark=1, drop_bright=1)
+        solver = PhotometricStereoSolver(self.L, cfg, self.device)
         self.assertEqual(solver.n_lights, 4)
-        self.assertEqual(solver.drop_dark, 1)
-        self.assertEqual(solver.drop_bright, 1)
+        self.assertEqual(solver.config.drop_dark, 1)
+        self.assertEqual(solver.config.drop_bright, 1)
 
     def test_ps_solver_weight_mask(self):
-        solver = PhotometricStereoSolver(self.L, drop_dark=1, drop_bright=1)
+        cfg = PSConfig(drop_dark=1, drop_bright=1)
+        solver = PhotometricStereoSolver(self.L, cfg, self.device)
         # 1 pixel, 4 lights with intensities [10, 50, 100, 200]
         I_valid = np.array([[10, 50, 100, 200]], dtype=np.float32)
         mask = solver._build_weight_mask(I_valid)
@@ -44,7 +50,8 @@ class TestIADPipeline(unittest.TestCase):
         self.assertEqual(mask[0, 3], 0.0)  # 200
 
     def test_ps_solver_gray_stack(self):
-        solver = PhotometricStereoSolver(np.eye(3), drop_dark=0, drop_bright=0)
+        cfg = PSConfig(drop_dark=0, drop_bright=0)
+        solver = PhotometricStereoSolver(np.eye(3), cfg, self.device)
         # Create BGR image (Blue)
         img = np.zeros((10, 10, 3), dtype=np.uint8)
         img[:, :, 0] = 255 # B=255
@@ -56,7 +63,8 @@ class TestIADPipeline(unittest.TestCase):
 
     def test_ps_solver_solve_flat_plane(self):
         # If all images are identical (flat white plane), normals should point straight up (0,0,1)
-        solver = PhotometricStereoSolver(self.L, drop_dark=0, drop_bright=0)
+        cfg = PSConfig(drop_dark=0, drop_bright=0)
+        solver = PhotometricStereoSolver(self.L, cfg, self.device)
         h, w = 50, 50
         # Create 4 identical images (white square in middle)
         img = np.zeros((h, w, 3), dtype=np.uint8)
@@ -90,7 +98,8 @@ class TestIADPipeline(unittest.TestCase):
         self.assertTrue(np.allclose(ordered[3], [10, 100]))  # BL
 
     def test_autocropper_find_bbox(self):
-        cropper = AutoCropper(output_size=100, crop_offset=0)
+        cfg = DataConfig(raw_dir=Path(''), out_dir=Path(''), output_size=100, crop_offset=0)
+        cropper = AutoCropper(cfg)
         # Create a white square on black background
         img = np.zeros((200, 200, 3), dtype=np.uint8)
         cv2.rectangle(img, (50, 50), (150, 150), (255, 255, 255), -1)
@@ -103,7 +112,8 @@ class TestIADPipeline(unittest.TestCase):
         self.assertTrue(np.max(bbox[:, 0]) <= 152)
 
     def test_autocropper_crop_and_resize(self):
-        cropper = AutoCropper(output_size=100, crop_offset=0)
+        cfg = DataConfig(raw_dir=Path(''), out_dir=Path(''), output_size=100, crop_offset=0)
+        cropper = AutoCropper(cfg)
         img = np.zeros((200, 200, 3), dtype=np.uint8)
         # Draw a 100x100 square
         cv2.rectangle(img, (50, 50), (150, 150), (255, 255, 255), -1)

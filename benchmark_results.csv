@@ -1,0 +1,5 @@
+Model,Backbone,AUROC,Train_Time,Infer_Time
+PatchCore,convnext_tiny,0.9929,19.93,1.19
+PaDiM,convnext_tiny,0.9952,17.09,0.78
+SuperSimpleNet,convnext_tiny,0.9708,82.95,0.39
+CAE,convnext_tiny,0.8405,13.25,0.22

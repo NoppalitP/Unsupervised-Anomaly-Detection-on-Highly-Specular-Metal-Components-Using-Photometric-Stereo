@@ -1,68 +1,89 @@
 # Unsupervised Anomaly Detection on Highly Specular Metal Components Using Photometric Stereo
 
-This project implements an end-to-end **Industrial Anomaly Detection (IAD)** pipeline designed to solve the challenges of inspecting highly specular metal surfaces. Human visual inspection often suffers from low repeatability (66.83%) and high miss rates (30-40%) (Stallard *et al.*, 2018). This project automates the process to achieve **Zero-Defect Manufacturing** by combining computational imaging with lightweight deep learning.
+This project implements a modular, production-ready **Industrial Anomaly Detection (IAD)** pipeline designed to inspect highly specular metal surfaces. By combining **Photometric Stereo (PS)** with State-of-the-Art (SOTA) Unsupervised Anomaly Detection (UAD) models, the system effectively neutralizes distracting specular highlights and reveals subtle surface defects like scratches, dents, and stains.
 
 ## 🌟 Key Methodologies
 
-To address the core limitations of traditional inspection, this project integrates three main solutions:
+1.  **Acquisition - Photometric Stereo (PS):** Decouples surface geometry (Normal Map) from appearance (Albedo Map) using a multi-light setup and a GPU-accelerated WLS solver with outlier rejection.
+2.  **Detection - UAD Benchmarking:** Evaluates 5 architectural families (PatchCore, PaDiM, SuperSimpleNet, CAE, DRAEM) to identify the most robust solution for industrial deployment.
+3.  **100% Deterministic & Reproducible:** The pipeline enforces strict random seeding across Python, NumPy, PyTorch, and CuDNN, ensuring exact reproducibility for academic research and production validation.
+4.  **Metadata Logging:** Automatically generates detailed JSON logs of all hyperparameters and configurations to ensure experimental rigor and transparency.
 
-1. **Acquisition (The Eye) - Photometric Stereo (PS):**
-   Highly reflective metal surfaces cause blind spots (specular highlights) and hide defects under shadows. We implement **Photometric Stereo** (Woodham, 1980) by capturing multiple images from a fixed camera viewpoint while varying the light direction. The algorithm fuses these images to extract the **Surface Normal Map** (revealing 3D shape, dents, and scratches) and the **Albedo Map** (revealing true surface color, stains, and rust), effectively neutralizing distracting reflections.
+## 📊 Benchmark Results (Before vs. After PS)
 
-2. **Augmentation (The Simulator) - Synthetic Defect Generation:**
-   In real-world manufacturing, defect data is extremely rare (severe data imbalance). To train effective models using only "good" samples, we utilize synthetic anomaly generation techniques such as **CutPaste** (Li *et al.*, 2021) and **NSA** (Schlüter *et al.*, 2023) to simulate realistic defects (scratches, dents) during training.
+The following results demonstrate the significant performance gain achieved by using Photometric Stereo Normal Maps compared to raw single-light images. **All results are 100% reproducible.**
 
-3. **Inference (The Speed) - Lightweight Deep Learning (EfficientAD):**
-   Industrial applications require high-speed, low-cost inference (ROI & Cost Efficiency). We benchmark several Unsupervised Anomaly Detection (UAD) models and focus on lightweight architectures like **EfficientAD** (Batzner *et al.*, 2024). Utilizing a Student-Teacher knowledge distillation approach, the model achieves millisecond-level latency while maintaining high accuracy (AUROC).
+| Model | **Before PS (Raw Image)** | **After PS (Normal Map)** | **Improvement (Gain)** |
+| :--- | :---: | :---: | :---: |
+| **PaDiM** | 0.9310 | **0.9881** | **+5.71%** |
+| **PatchCore** | 0.9310 | **0.9833** | **+5.23%** |
+| **SuperSimpleNet** | 0.9214 | **0.9524** | **+3.10%** |
+| **DRAEM** | 0.5119 | **0.7500** | **+23.81%** |
+| **CAE (Baseline)** | 0.5524 | **0.7357** | **+18.33%** |
 
-## 🚀 Features
-- **Photometric Stereo Pipeline**: GPU-accelerated Weighted Least Squares (WLS) solver with outlier rejection to estimate surface normals and albedo.
-- **Anomaly Detection**: Includes SOTA algorithms such as PatchCore, PaDiM, DRAEM, SimpleNet, and EfficientAD.
-- **Dataset Management**: Automated cropping and conversion tools to build MVTec-style datasets from raw PS captures.
-- **Hardware Integration**: Includes 3D CAD models for the lighting dome and Arduino firmware for LED synchronization.
+*Note: AUROC scores calculated on a custom dataset of specular metal components.*
 
-## 📂 Project Structure
-The repository has been streamlined for efficiency:
+## 📂 Modular Project Structure
 
-*   `main.py`: The consolidated End-to-End Pipeline (PS Solver → AutoCropper → Dataset Builder → UAD Benchmark).
-*   `iad_benchmark.ipynb`: Interactive Jupyter Notebook for research and visualization.
-*   `tests/`: Unit tests for verifying mathematical and image processing logic.
-*   `experiments/`: Plotting scripts for research papers (`plot_*.py`) and hardware utilities.
-*   `docs/`: Research papers, thesis sections, and project documentation.
-*   `3D/`: CAD models for the physical experimental setup.
-*   `arduino/`: Firmware for controlling the LED light source array.
+The project follows a "Separation of Concerns" (SoC) architecture:
+
+```text
+src/
+├── config/     # Dataclass-based Configuration Management
+├── core/       # Physics/Math (Photometric Stereo WLS Solver)
+├── data/       # Dataset Building, AutoCropping, and Data Loaders
+├── models/     # Modular UAD Model Wrappers (PatchCore, DRAEM, etc.)
+├── utils/      # Visualization (Anomaly Heatmaps) and Logging
+└── pipeline.py # The Main Orchestrator
+main.py         # Entry Point (CLI Argument Parsing)
+```
 
 ## 🛠️ Setup & Installation
 
-### Environment
-You can set up the required Python environment using the provided `environment.yml`.
-
-**Using Conda:**
+**Environment Setup:**
 ```bash
 conda env create -f environment.yml
 conda activate defect_vision
 ```
 
 ## 📖 Usage
-Run the complete pipeline (PS → Dataset → Training → Evaluation) using `main.py`:
 
-```bash
-python main.py ^
-    --raw_dir D:\IAD\data_scan\dataset\raw_captures ^
-    --out_dir mvtec_dataset ^
-    --calib_npy D:\IAD\data_scan\dataset\light_directions_12.npy ^
-    --output_mode after ^
-    --visualize ^
-    --viz_dir heatmaps
+### 1. Run "After PS" Benchmark (Primary)
+Processes raw captures into Normal Maps, evaluates the models, and saves checkpoints:
+```powershell
+python main.py `
+    --raw_dir D:\IAD\data_scan\dataset\raw_captures `
+    --out_dir mvtec_dataset_after `
+    --output_mode after `
+    --output_csv benchmark_results_after.csv `
+    --visualize `
+    --viz_dir heatmaps_after `
+    --save_models `
+    --models_dir checkpoints_after
 ```
 
-*Use `--skip_build` if your MVTec dataset is already prepared.*
+### 2. Run "Before PS" Comparison
+Evaluates models directly on masked raw images:
+```powershell
+python main.py `
+    --raw_dir D:\IAD\data_scan\dataset\raw_captures `
+    --out_dir mvtec_dataset_before `
+    --output_mode before `
+    --output_csv benchmark_results_before.csv `
+    --visualize `
+    --viz_dir heatmaps_before `
+    --save_models `
+    --models_dir checkpoints_before
+```
 
-## 📝 References & Citation
+### 3. Reproducibility
+Every run automatically generates a `.json` metadata file (e.g., `benchmark_results_after.json`) containing:
+*   Backbone architecture and feature dimensions.
+*   Hyperparameters (Learning rates, epochs, coreset ratios).
+*   PS Solver settings (Drop dark/bright counts, lambda).
+*   Random Seed configuration.
+
+## 📝 References
 - Woodham, R. J. (1980). *Photometric method for determining surface orientation from multiple images.*
-- Stallard *et al.* (2018). *Uncertainty in Manual Visual Inspection.* Journal of Manufacturing Systems.
-- Li *et al.* (2021). *CutPaste: Self-Supervised Learning for Anomaly Detection and Localization.* CVPR.
-- Schlüter *et al.* (2023). *Natural Synthetic Anomalies for Self-Supervised Anomaly Detection and Localization.*
-- Batzner *et al.* (2024). *EfficientAD: Accurate Visual Anomaly Detection at Millisecond-Level Latencies.* WACV.
-
-If you use this work in your research, please refer to the documents in the `docs/` folder for citation details.
+- Stallard *et al.* (2018). *Uncertainty in Manual Visual Inspection.*
+- Batzner *et al.* (2024). *EfficientAD: Accurate Visual Anomaly Detection at Millisecond-Level Latencies.*

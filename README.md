@@ -4,8 +4,15 @@ This repository contains the implementation of an end-to-end Industrial Anomaly 
 
 ## Key Methodologies
 
+![Photometric Stereo Pipeline Results](image/photometric_results_autocrop.png)
+*Figure 1: Comparison of Raw Input Images (top) and the Computed Normal Maps (bottom) using our GPU-accelerated Weighted Least Squares (WLS) solver. The Normal Map successfully suppresses specular noise.*
+
 1. **Acquisition - Photometric Stereo (PS):** 
    Decouples surface geometry (Normal Map) from appearance (Albedo Map) utilizing a multi-light setup and a GPU-accelerated Weighted Least Squares (WLS) solver, which includes an outlier rejection mechanism for robustness against specular noise.
+   
+   ![Experimental Setup](image/Experimental_Setup_and_Defects_Figure2.png)
+   *Figure 2: The custom 12-directional LED dome lighting setup utilized for the Photometric Stereo acquisition process.*
+
 2. **Detection - UAD Benchmarking:** 
    Evaluates five distinct architectural paradigms (PatchCore, PaDiM, SuperSimpleNet, CAE, and DRAEM) to establish the most robust methodology for industrial deployment.
 3. **Deterministic Reproducibility:** 

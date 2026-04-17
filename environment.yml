@@ -4,16 +4,16 @@ channels:
   - pytorch
   - nvidia
   - conda-forge
-  - defaults
+  name: defect_vision
 
-dependencies:
-  # Python
-  - python=3.11
+  dependencies:
+    # Python
+    - python=3.11
 
-  # PyTorch (CUDA 12.1) — เปลี่ยน cudatoolkit ให้ตรง GPU ถ้าต้องการ
-  - pytorch>=2.2.0
-  - torchvision>=0.17.0
-  - pytorch-cuda=13.0
+    # PyTorch (CUDA 12.1)
+    - pytorch>=2.2.0
+    - torchvision>=0.17.0
+    - pytorch-cuda=12.1
 
   # Computer Vision
   - opencv>=4.9.0          # cv2

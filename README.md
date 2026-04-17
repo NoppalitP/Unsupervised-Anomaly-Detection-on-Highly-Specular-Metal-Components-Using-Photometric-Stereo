@@ -22,32 +22,41 @@ To address the core limitations of traditional inspection, this project integrat
 - **Hardware Integration**: Includes 3D CAD models for the lighting dome and Arduino firmware for LED synchronization.
 
 ## 📂 Project Structure
-The repository is organized as follows:
+The repository has been streamlined for efficiency:
 
-*   `src/`: Core logic including `iad_main_pipeline.py` (End-to-End PS+UAD), `iad_dataset_generator.py`, and `iad_thesis_grid_search.py`.
+*   `main.py`: The consolidated End-to-End Pipeline (PS Solver → AutoCropper → Dataset Builder → UAD Benchmark).
+*   `iad_benchmark.ipynb`: Interactive Jupyter Notebook for research and visualization.
+*   `tests/`: Unit tests for verifying mathematical and image processing logic.
 *   `experiments/`: Plotting scripts for research papers (`plot_*.py`) and hardware utilities.
-*   `docs/`: Research papers (e.g., `G5_final.pdf`), thesis sections, and project documentation.
-*   `image/`: Visualization results, defect heatmaps, and experimental setup photos.
-*   `3D/`: CAD models for the physical experimental setup (casing, mounts).
+*   `docs/`: Research papers, thesis sections, and project documentation.
+*   `3D/`: CAD models for the physical experimental setup.
 *   `arduino/`: Firmware for controlling the LED light source array.
-*   `archive/`: Historical versions of scripts for reference.
 
 ## 🛠️ Setup & Installation
 
 ### Environment
-You can set up the required Python environment using the provided `environment.yml` (for Conda) or `iad_setup_colab.py` (for Google Colab).
+You can set up the required Python environment using the provided `environment.yml`.
 
 **Using Conda:**
 ```bash
 conda env create -f environment.yml
-conda activate iad-env
+conda activate defect_vision
 ```
 
 ## 📖 Usage
-1.  **Run End-to-End Benchmark**: Use `src/iad_main_pipeline.py` for the complete pipeline (PS → Dataset → Training → Evaluation).
-2.  **Build Dataset**: Use `src/iad_dataset_generator.py` to prepare your raw captures in MVTec format.
-3.  **Run Thesis Experiments**: Use `src/iad_thesis_grid_search.py` to run the 30-experiment grid search benchmark across multiple backbones and models.
-4.  **Generate Figures**: All figure generation scripts (e.g., `plot_iad_ps_results.py`, `plot_iad_setup_diagram.py`) are located in the `experiments/` folder.
+Run the complete pipeline (PS → Dataset → Training → Evaluation) using `main.py`:
+
+```bash
+python main.py ^
+    --raw_dir D:\IAD\data_scan\dataset\raw_captures ^
+    --out_dir mvtec_dataset ^
+    --calib_npy D:\IAD\data_scan\dataset\light_directions_12.npy ^
+    --output_mode after ^
+    --visualize ^
+    --viz_dir heatmaps
+```
+
+*Use `--skip_build` if your MVTec dataset is already prepared.*
 
 ## 📝 References & Citation
 - Woodham, R. J. (1980). *Photometric method for determining surface orientation from multiple images.*

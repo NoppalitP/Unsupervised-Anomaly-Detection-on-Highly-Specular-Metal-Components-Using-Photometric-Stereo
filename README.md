@@ -10,12 +10,6 @@ This repository contains the implementation of an end-to-end **Industrial Anomal
 
 By integrating **Photometric Stereo (PS)** with state-of-the-art **Unsupervised Anomaly Detection (UAD)** models, this framework systematically mitigates specular highlights to reveal subtle surface defects such as scratches, dents, and stains. It provides a robust, cost-effective alternative to expensive commercial 3D cameras, suitable for industrial manufacturing environments.
 
-<p align="center">
-  <img src="image/photometric_method.png" width="60%">
-</p>
-
-_Figure 2: Overview of the Photometric Stereo pipeline. A series of images captured under varying illumination directions from a fixed viewpoint (top) are computationally combined to estimate the surface's intrinsic diffuse reflectance (Albedo Map) and geometric structure (Normal Map) (bottom)._
-
 ---
 
 ## 🔬 Key Methodologies
@@ -23,6 +17,12 @@ _Figure 2: Overview of the Photometric Stereo pipeline. A series of images captu
 ### 1. Acquisition - Photometric Stereo (PS)
 
 The system decouples surface geometry (Normal Map) from appearance (Albedo Map) utilizing a multi-light setup and a GPU-accelerated Weighted Least Squares (WLS) solver with Tikhonov Regularization. This process includes an outlier rejection mechanism for robustness against specular noise.
+
+<p align="center">
+  <img src="image/photometric_method.png" width="60%">
+</p>
+
+_Figure 2: Overview of the Photometric Stereo pipeline. A series of images captured under varying illumination directions from a fixed viewpoint (top) are computationally combined to estimate the surface's intrinsic diffuse reflectance (Albedo Map) and geometric structure (Normal Map) (bottom)._
 
 - **Hardware setup:** Employs a custom 12-directional LED dome lighting setup (NeoPixel Ring), an NVIDIA Jetson Orin Nano Super, and a Raspberry Pi HQ Camera.
 

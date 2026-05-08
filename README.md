@@ -40,13 +40,13 @@ The pipeline enforces strict random seeding across Python, NumPy, PyTorch, and C
 
 Empirical results demonstrate a substantial performance improvement when utilizing Photometric Stereo Normal Maps (3D) as opposed to raw single-light images (2D). All reported metrics are 100% reproducible.
 
-| Model | Before PS (Raw 2D Image) | After PS (3D Normal Map) | Improvement (Gain) |
+| Model | Before PS (Raw Image) | After PS (Normal Map) | Improvement (Gain) |
 | :--- | :---: | :---: | :---: |
-| **PaDiM** | 0.9454 | **1.0000** | **+0.0546** |
-| **PatchCore** | 0.9076 | **0.9748** | **+0.0672** |
-| **SuperSimpleNet** | 0.9349 | 0.9118 | -0.0231 |
-| **DRAEM** | 0.3866 | **0.7983** | **+0.4117** |
-| **CAE (Baseline)** | 0.5714 | **0.7143** | **+0.1429** |
+| **PaDiM** | 0.9310 | **0.9881** | **+5.71%** |
+| **PatchCore** | 0.9310 | **0.9833** | **+5.23%** |
+| **SuperSimpleNet** | 0.9214 | **0.9524** | **+3.10%** |
+| **DRAEM** | 0.5119 | **0.7500** | **+23.81%** |
+| **CAE (Baseline)** | 0.5524 | **0.7357** | **+18.33%** |
 
 *Note: Performance is quantified using Area Under the Receiver Operating Characteristic Curve (AUROC). The dataset consists of Aluminum 1100 components with simulated scratches and dents.*
 

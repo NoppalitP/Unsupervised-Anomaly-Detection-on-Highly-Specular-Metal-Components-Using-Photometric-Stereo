@@ -28,3 +28,19 @@ checkpoints*/
 
 # VS Code
 .vscode/
+
+# Benchmarks and Generated Output
+benchmark_results*.csv
+benchmark_results*.json
+heatmaps/
+heatmaps_after/
+heatmaps_before/
+
+# Documents (Drafts, Binaries, Zips)
+docs/*.docx
+docs/*.zip
+docs/*.pdf
+
+# 3D Print Exports
+3D/waiting_print/
+

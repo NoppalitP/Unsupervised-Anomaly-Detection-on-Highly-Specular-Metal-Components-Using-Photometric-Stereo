@@ -76,7 +76,7 @@ Empirical results demonstrate a substantial performance improvement when utilizi
 
 _Note: Performance is quantified using Area Under the Receiver Operating Characteristic Curve (AUROC). The dataset consists of Aluminum 1100 components with simulated scratches and dents._
 
-**Key Insight:** Reconstruction-based models (DRAEM, CAE) failed significantly on 2D images due to specular highlights. The transition to 3D normal maps dramatically improved performance, with **PaDiM achieving a perfect AUROC of 1.0000** with an inference time of only 5.3 milliseconds.
+**Key Insight:** Reconstruction-based models (DRAEM, CAE) failed significantly on 2D images due to specular highlights. The transition to 3D normal maps dramatically improved performance, with **PaDiM achieving an AUROC of 0.9881** with an inference time of only 5.3 milliseconds.
 
 ---
 

@@ -204,7 +204,7 @@ class IADInferenceApp:
 
 if __name__ == "__main__":
     # Define paths
-    calib_path = "D:/IAD/data_scan/dataset/light_directions_12.npy" # Replace with your actual path on Jetson
+    calib_path = "calib_data/light_directions_12.npy" 
     
     # 🌟 Choose the model you want to run here! ("PaDiM" or "PatchCore")
     CHOSEN_MODEL = "PatchCore" 

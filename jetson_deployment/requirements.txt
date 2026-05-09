@@ -1,0 +1,12 @@
+# IAD Deployment Requirements for NVIDIA Jetson Orin Nano
+# Note: For Jetson devices, it is highly recommended to use the pre-built PyTorch and Torchvision wheels provided by NVIDIA (JetPack) rather than installing via pip directly.
+
+# Install these using pip:
+numpy>=1.26.0
+scipy>=1.11.0
+opencv-python>=4.9.0
+matplotlib>=3.8.0
+tqdm>=4.66.0
+pyserial>=3.5
+pandas>=2.1.0
+scikit-learn>=1.3.0

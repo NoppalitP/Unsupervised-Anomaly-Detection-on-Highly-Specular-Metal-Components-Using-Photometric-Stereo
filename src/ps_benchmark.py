@@ -523,6 +523,13 @@ class PatchCore:
             mins.append(d.min(1).values)
         return torch.cat(mins, 0).reshape(B, G, G).cpu()
 
+    def save(self, path: str):
+        torch.save({"bank": self.bank.cpu() if self.bank is not None else None}, path)
+
+    def load(self, path: str, device=None):
+        ckpt = torch.load(path, map_location=device or self.ext.device)
+        self.bank = ckpt["bank"].to(device or self.ext.device)
+
     @torch.no_grad()
     def predict(self, loader: DataLoader) -> Tuple[np.ndarray, np.ndarray]:
         scores, labels = [], []

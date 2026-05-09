@@ -13,7 +13,7 @@ from scipy.ndimage import gaussian_filter
 # Import necessary components from your pipeline
 from src.ps_benchmark import (
     CFG, set_seed, PhotometricStereoSolver, AutoCropper, 
-    BackboneExtractor, PaDiM, load_L_matrix, build_theoretical_L, _MEAN, _STD
+    BackboneExtractor, PaDiM, PatchCore, load_L_matrix, build_theoretical_L, _MEAN, _STD
 )
 
 # ---------------------------------------------------------
@@ -42,11 +42,15 @@ def gstreamer_pipeline(
 # 2. Inference Application Class
 # ---------------------------------------------------------
 class IADInferenceApp:
-    def __init__(self, calib_npy_path, model_checkpoint_path, threshold=0.6):
+    def __init__(self, calib_npy_path, model_type="PaDiM", threshold=0.6):
         print("\n=== Initializing IAD Inference System ===")
         set_seed(42)
         self.device = CFG.DEVICE
         self.threshold = threshold
+        self.model_type = model_type
+        
+        # Determine Checkpoint Path
+        model_checkpoint_path = f"checkpoints_after/{model_type}_convnext_tiny.pt"
         
         # Load Light Matrix
         if os.path.exists(calib_npy_path):
@@ -68,16 +72,23 @@ class IADInferenceApp:
         print("✅ Initialized Photometric Stereo Solver.")
 
         # Initialize Model & Load Weights
-        print("⏳ Loading PaDiM model & Backbone...")
+        print(f"⏳ Loading {model_type} model & Backbone...")
         self.extractor = BackboneExtractor(backbone_name="convnext_tiny", device=self.device)
-        self.model = PaDiM(self.extractor)
         
         if not os.path.exists(model_checkpoint_path):
             raise FileNotFoundError(f"Model checkpoint not found at {model_checkpoint_path}")
             
-        ckpt = torch.load(model_checkpoint_path, map_location=self.device)
-        self.model.mu = ckpt["mu"].to(self.device)
-        self.model.inv = ckpt["inv"].to(self.device)
+        if model_type == "PaDiM":
+            self.model = PaDiM(self.extractor)
+            ckpt = torch.load(model_checkpoint_path, map_location=self.device)
+            self.model.mu = ckpt["mu"].to(self.device)
+            self.model.inv = ckpt["inv"].to(self.device)
+        elif model_type == "PatchCore":
+            self.model = PatchCore(self.extractor)
+            self.model.load(model_checkpoint_path, device=self.device)
+        else:
+            raise ValueError("Unsupported model_type. Choose 'PaDiM' or 'PatchCore'.")
+            
         print("✅ Model loaded successfully!")
 
         # Image Transform
@@ -194,13 +205,15 @@ class IADInferenceApp:
 if __name__ == "__main__":
     # Define paths
     calib_path = "D:/IAD/data_scan/dataset/light_directions_12.npy" # Replace with your actual path on Jetson
-    model_path = "checkpoints_after/PaDiM_convnext_tiny.pt"
+    
+    # 🌟 Choose the model you want to run here! ("PaDiM" or "PatchCore")
+    CHOSEN_MODEL = "PatchCore" 
     
     # You might need to adjust this threshold based on your actual data distribution!
     # A score higher than this threshold is flagged as a Defect.
     decision_threshold = 0.6 
     
-    app = IADInferenceApp(calib_path, model_path, threshold=decision_threshold)
+    app = IADInferenceApp(calib_path, model_type=CHOSEN_MODEL, threshold=decision_threshold)
     
     # Run the sequence
     captured_images = app.capture_images(mode_groups=12)
